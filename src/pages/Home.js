@@ -22,7 +22,7 @@ function Home() {
     return (
         <>
             <Container className="mt-5">
-                <h2>Cyrptocurrency Prices</h2>
+                <h2>Cryptocurrency Prices</h2>
                 <p className="text-secondary">The global cryptocurrency data on Cyrptoscope. <a href="/exchanges">See cyrpto exchanges.</a></p>
             </Container>
             <Container>

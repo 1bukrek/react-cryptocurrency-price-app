@@ -4,17 +4,20 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import App from './App';
 import Home from './pages/Home.js';
+import CurrencyConverter from './pages/CurrencyConverter.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const router = createBrowserRouter([
-  { path: '/', element: <Home /> }]);
+  { path: '/', element: <Home /> },
+  { path: '/currency-converter', element: <CurrencyConverter /> }
+]);
 
 root.render(
-  <React.StrictMode>
+  <>
     <App />
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </>
 );
 
 

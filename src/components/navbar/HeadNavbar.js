@@ -9,6 +9,7 @@ function HeadNavbar() {
                     <Nav className="me-auto">
                         <Nav.Link href="/cyrptocurrencies">Cyrpto Currencies</Nav.Link>
                         <Nav.Link href="/exchanges">Exchanges</Nav.Link>
+                        <Nav.Link href="/currency-converter">Currency Converter</Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>
