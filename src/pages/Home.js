@@ -1,30 +1,104 @@
-import { useEffect, useState } from "react";
-import axios from "axios"
-import { Container, ListGroup } from "react-bootstrap";
+import { useState } from "react";
+import { Container, ListGroup, Row, Col, Card } from "react-bootstrap";
 
-function Home() {
-    const [coins, setCoins] = useState([]);
+import "./Module.Home.css"
 
-    useEffect(() => {
-        axios.get("https://api.coingecko.com/api/v3/coins/markets", {
-            params: {
-                vs_currency: "usd",
-                order: "market_cap_desc",
-                per_page: 20,
-                page: 1,
-                sparkline: false,
-            },
-        })
-            .then(response => setCoins(response.data))
-            .catch(error => console.error(error));
-    }, []);
+function Home({ coins, filteredCoins, searchTerm }) {
 
+    const [hoveredCoin, setHoveredCoin] = useState("")
+
+    if (!coins) return <p>Loading...</p>;
     return (
         <>
+            {searchTerm &&
+                <Row className="mt-3" style={{ width: "800px", justifyContent: "flex- end", marginLeft: "auto", marginRight: "300px" }}>
+                    <Col md={5} style={{ maxHeight: "400px", overflowY: "auto" }}>
+                        <ListGroup>
+                            <small className="mb-0">Cryptocurrencies</small>
+                            <hr className="mt-1"></hr>
+                            {filteredCoins.length === 0 && (
+                                <ListGroup.Item>Your search did not match any records.</ListGroup.Item>
+                            )}
+
+                            {filteredCoins.map((coin) => (
+                                <ListGroup.Item
+                                    key={coin.id}
+                                    action
+                                    onMouseEnter={() => setHoveredCoin(coin)}
+                                    style={{ cursor: "pointer", borderRadius: "5px" }}
+                                    className="border-0"
+                                    id="item"
+                                >
+                                    <div className="d-flex align-items-center">
+                                        <img
+                                            src={coin.image}
+                                            alt={coin.name}
+                                            style={{ width: 20, height: 20, marginRight: 10 }}
+                                        />
+                                        {coin.name} <small className="mb-0 mx-2 text-secondary">{coin.symbol.toUpperCase()}</small>
+                                    </div>
+
+                                </ListGroup.Item>
+                            ))}
+                        </ListGroup>
+                    </Col>
+
+                    <Col md={7}>
+                        {hoveredCoin ? (
+                            <Card style={{ borderRadius: "0px", borderTop: "0px", borderBottom: "0px", borderRight: "0px", borderLeft: "1px solid rgb(211, 211, 211)" }}>
+                                <Card.Body>
+                                    <Card.Title>
+                                        <img
+                                            src={hoveredCoin.image}
+                                            alt={hoveredCoin.name}
+                                            style={{ width: 30, height: 30, marginRight: 10 }}
+                                        />{hoveredCoin.name} <small className="mb-0 mx-2 text-secondary">{hoveredCoin.symbol.toUpperCase()}</small><small style={{ color: "#474747", fontSize: "15px" }}>statistics</small>
+                                        <hr className="mt-1 mb-1"></hr>
+                                    </Card.Title>
+                                    <Card.Text>
+                                        <strong>Price:</strong>{" "}
+                                        {new Intl.NumberFormat("en-US", {
+                                            style: "currency",
+                                            currency: "USD",
+                                        }).format(hoveredCoin.current_price)}
+                                        <br />
+                                        <strong>24h Change:</strong>{" "}
+                                        <span
+                                            style={{
+                                                color:
+                                                    hoveredCoin.price_change_percentage_24h > 0
+                                                        ? "green"
+                                                        : "red",
+                                            }}
+                                        >
+                                            {hoveredCoin.price_change_percentage_24h.toFixed(2)}%
+                                        </span>
+                                        <br />
+                                        <strong>24h Volume:</strong>{" "}
+                                        {new Intl.NumberFormat("en-US").format(
+                                            hoveredCoin.total_volume
+                                        )}
+                                        <br />
+                                        <strong>Market Cap:</strong>{" "}
+                                        {new Intl.NumberFormat("en-US", {
+                                            style: "currency",
+                                            currency: "USD",
+                                        }).format(hoveredCoin.market_cap)}
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
+                        ) : (
+                            <p>Hover over a coin to see details.</p>
+                        )}
+                    </Col>
+                </Row >
+            }
+
             <Container className="mt-5">
                 <h2>Cryptocurrency Prices</h2>
                 <p className="text-secondary">The global cryptocurrency data on Cyrptoscope. <a href="/exchanges">See cyrpto exchanges.</a></p>
             </Container>
+
             <Container>
                 <div className="row">
                     <p className="col-6 mb-0 text-secondary">Coin</p>
